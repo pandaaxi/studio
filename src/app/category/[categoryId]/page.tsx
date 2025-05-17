@@ -199,7 +199,7 @@ export default function CategoryPage() {
           collapsible="icon" 
           className="hidden md:flex bg-card border-r top-[88px] h-[calc(100svh-88px)]"
         > 
-          <SidebarContent className="p-0 pt-[88px] flex flex-col gap-0">
+          <SidebarContent className="p-0 flex flex-col gap-0">
             {/* Sidebar's own fixed header part - visible when expanded */}
             <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-start gap-2">
               <SidebarTrigger />
