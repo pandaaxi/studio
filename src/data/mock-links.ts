@@ -1,73 +1,116 @@
 
 import type { Category } from '@/types';
+import { Code2, Palette, BookOpenCheck, Gamepad2, BookMarked, DownloadCloud, Waypoints, Presentation, Smartphone, MonitorSmartphone, Languages, AppWindow } from 'lucide-react';
 
 export const MOCK_CATEGORIES: Category[] = [
   {
+    id: "gaming",
+    name: "Gaming",
+    description: "Download and play all your favourite games or emulate some old but gold ones!",
+    icon: "Gamepad2",
+    links: [],
+  },
+  {
+    id: "reading",
+    name: "Reading",
+    description: "Whether you're a bookworm, otaku or comic book fan, you'll be able to find your favourite pieces of literature here for free!",
+    icon: "BookMarked",
+    links: [],
+  },
+  {
+    id: "downloading",
+    name: "Downloading",
+    description: "Download all your favourite software, movies, TV shows, music, games and more!",
+    icon: "DownloadCloud",
+    links: [],
+  },
+  {
+    id: "torrenting",
+    name: "Torrenting",
+    description: "Download your favourite media using the BitTorrent protocol.",
+    icon: "Waypoints",
+    links: [],
+  },
+  {
+    id: "educational",
+    name: "Educational",
+    description: "Educational content for all ages.",
+    icon: "Presentation",
+    links: [],
+  },
+  {
+    id: "android-ios",
+    name: "Android / iOS",
+    description: "All forms of content for Android and iOS.",
+    icon: "Smartphone",
+    links: [],
+  },
+  {
+    id: "linux-macos",
+    name: "Linux / macOS",
+    description: "The $HOME of Linux and macOS.",
+    icon: "MonitorSmartphone",
+    links: [],
+  },
+  {
+    id: "non-english",
+    name: "Non English",
+    description: "Content in languages other than English.",
+    icon: "Languages",
+    links: [],
+  },
+  {
+    id: "miscellaneous",
+    name: "Miscellaneous",
+    description: "Various other resources and tools.",
+    icon: "AppWindow",
+    links: [],
+  },
+  {
     id: "dev-tools",
     name: "Developer Tools",
-    description: "Essential tools, platforms, and services for building, testing, and deploying software projects efficiently.",
+    description: "Essential tools for building and deploying software.",
+    icon: "Code2",
     links: [
       { 
         id: "gh", 
         title: "GitHub", 
         url: "https://github.com", 
-        description: "The leading platform for software development, version control, and collaboration. Host and review code, manage projects, and build software alongside millions of developers." 
+        description: "The leading platform for software development, version control, and collaboration." 
       },
       { 
         id: "vscode", 
         title: "Visual Studio Code", 
         url: "https://code.visualstudio.com/", 
-        description: "A popular, free, and open-source code editor with powerful features like IntelliSense, debugging, Git integration, and a vast ecosystem of extensions." 
+        description: "A popular, free, and open-source code editor with powerful features." 
       },
-      {
-        id: "docker",
-        title: "Docker",
-        url: "https://www.docker.com/",
-        description: "A platform for developing, shipping, and running applications in containers, ensuring consistency across different environments."
-      }
     ],
   },
   {
     id: "design-resources",
     name: "Design Resources",
-    description: "Find inspiration, UI kits, stock photos, and collaborative tools for your creative design projects.",
+    description: "Inspiration, UI kits, and tools for creative projects.",
+    icon: "Palette",
     links: [
       { 
         id: "figma", 
         title: "Figma", 
         url: "https://figma.com", 
-        description: "A collaborative interface design tool that allows teams to design, prototype, and gather feedback all in one place. Browser-based and feature-rich." 
+        description: "A collaborative interface design tool." 
       },
-      { 
-        id: "dribbble", 
-        title: "Dribbble", 
-        url: "https://dribbble.com", 
-        description: "A vibrant online community for designers to showcase their work, discover inspiration, and connect with creative professionals from around the world." 
-      },
-      {
-        id: "unsplash",
-        title: "Unsplash",
-        url: "https://unsplash.com/",
-        description: "A source of freely-usable high-resolution images contributed by photographers worldwide."
-      }
     ],
   },
   {
     id: "learning-platforms",
     name: "Learning Platforms",
-    description: "Expand your knowledge and acquire new skills with a wide range of online courses and educational resources.",
+    description: "Online courses and educational resources to expand your skills.",
+    icon: "BookOpenCheck",
     links: [
       {
         id: "coursera",
         title: "Coursera",
         url: "https://www.coursera.org/",
-        description: "Online learning platform offering courses, Specializations, and degrees from top universities and institutions."
-      },
-      {
-        id: "freecodecamp",
-        title: "freeCodeCamp",
-        url: "https://www.freecodecamp.org/",
-        description: "A non-profit organization that helps people learn to code for free through an interactive curriculum and community."
+        description: "Online learning platform offering courses from top universities."
       }
     ]
   }

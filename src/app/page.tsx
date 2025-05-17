@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowUp, Search } from 'lucide-react';
 import { SuggestDescriptionDialog } from '@/components/suggest-description-dialog';
-import { Card } from '@/components/ui/card';
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -72,7 +71,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <Card className="shadow-lg rounded-xl border border-foreground/20 p-6">
+        <div className="p-0 md:p-6"> {/* Adjusted padding, or remove if cards have enough */}
           {filteredCategories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredCategories.map((category) => (
@@ -83,14 +82,14 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 px-6">
+            <div className="text-center py-12 px-6 bg-card rounded-lg shadow-md">
               <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No categories found.</h2>
               <p className="text-muted-foreground">
                 Try adjusting your search term or explore all categories.
               </p>
             </div>
           )}
-        </Card>
+        </div>
       </main>
       <Footer />
       {showScrollTop && (
