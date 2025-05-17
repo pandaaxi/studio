@@ -12,12 +12,12 @@ import type { Category as CategoryType } from '@/types';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
   SidebarInset,
-  SidebarTrigger // Though trigger is in Header, provider needs to wrap sidebar parts
+  // SidebarTrigger // Trigger is in Header, Provider needs to wrap all parts
 } from '@/components/ui/sidebar';
 
 export default function CategoryPage() {
@@ -81,7 +81,7 @@ export default function CategoryPage() {
         </div>
       );
     }
-    
+
     if (error && !category) {
       return (
         <div className="flex-grow p-8">
@@ -101,17 +101,12 @@ export default function CategoryPage() {
 
     if (category) {
       return (
-        // ScrollArea now wraps the content inside SidebarInset for better control
         <ScrollArea className="h-full flex-grow p-4 md:p-6 lg:p-8">
           <div className="mb-6 flex items-center justify-between">
             <Link href="/" className="inline-flex items-center text-primary hover:underline text-sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Home
             </Link>
-             {/* Desktop sidebar trigger can be placed here if not in global header,
-                 but ui/sidebar's collapsible="icon" with rail is often preferred for desktop.
-                 The trigger in Header primarily serves mobile.
-              */}
           </div>
 
           <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
@@ -171,7 +166,7 @@ export default function CategoryPage() {
         </ScrollArea>
       );
     }
-    
+
     return (
        <div className="flex-grow p-8">
           <div className="mb-8">
@@ -189,26 +184,24 @@ export default function CategoryPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header 
-        searchTerm={headerSearchTerm} 
+    <SidebarProvider className="flex flex-col min-h-screen bg-background text-foreground">
+      <Header
+        searchTerm={headerSearchTerm}
         setSearchTerm={setHeaderSearchTerm}
-        showSidebarToggle={true} 
+        showSidebarToggle={true}
       />
-      <SidebarProvider>
-        <div className="flex flex-1 overflow-hidden"> {/* This container is crucial for SidebarProvider */}
-          <Sidebar side="left" collapsible="icon" className="hidden md:flex bg-card border-r"> {/* Desktop sidebar */}
-            <SidebarContent className="p-0"> {/* Use SidebarContent for consistent padding/scrolling */}
-              <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
-            </SidebarContent>
-          </Sidebar>
-          {/* Mobile sidebar is handled by SidebarProvider/Sidebar via Sheet when trigger in Header is clicked */}
-          <SidebarInset className="flex flex-col overflow-hidden"> {/* Ensure SidebarInset can grow and manage its own scroll */}
-            {mainContentArea()}
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
+      <div className="flex flex-1 overflow-hidden"> {/* This container is crucial for SidebarProvider's children layout */}
+        <Sidebar side="left" collapsible="icon" className="hidden md:flex bg-card border-r"> {/* Desktop sidebar */}
+          <SidebarContent className="p-0">
+            <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
+          </SidebarContent>
+        </Sidebar>
+        {/* Mobile sidebar is handled by SidebarProvider/Sidebar via Sheet when trigger in Header is clicked */}
+        <SidebarInset className="flex flex-col overflow-hidden"> {/* Ensure SidebarInset can grow and manage its own scroll */}
+          {mainContentArea()}
+        </SidebarInset>
+      </div>
       <Footer />
-    </div>
+    </SidebarProvider>
   );
 }
