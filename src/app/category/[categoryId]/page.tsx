@@ -17,6 +17,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarInset,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 
 export default function CategoryPage() {
@@ -199,12 +200,22 @@ export default function CategoryPage() {
           collapsible="icon" 
           className="hidden md:flex bg-card border-r top-[88px] h-[calc(100svh-88px)]"
         > 
-          <SidebarContent className="p-0 pt-[88px]"> {/* Added pt-[88px] */}
-            <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
+          <SidebarContent className="p-0 pt-[88px] flex flex-col gap-0">
+            {/* Sidebar's own fixed header part */}
+            <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-between">
+              <h3 className="text-md font-semibold text-primary">Categories</h3>
+              <SidebarTrigger className="h-5 w-5 text-primary hover:bg-primary/10" />
+            </div>
+            {/* Scrollable list of categories */}
+            <CategorySidebar 
+              categories={CATEGORIES} 
+              currentCategoryId={categoryId} 
+              className="flex-grow" 
+            />
           </SidebarContent>
         </Sidebar>
         
-        <SidebarInset className="flex flex-col overflow-hidden h-full min-h-0"> {/* Added h-full min-h-0 */}
+        <SidebarInset className="flex flex-col overflow-hidden h-full min-h-0">
           {mainContentArea()}
         </SidebarInset>
       </div>

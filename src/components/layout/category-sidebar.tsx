@@ -7,24 +7,21 @@ import type { Category } from '@/types';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import * as LucideIcons from 'lucide-react';
-import { SidebarTrigger } from '@/components/ui/sidebar'; // Import SidebarTrigger
+// SidebarTrigger is no longer imported here
 
 interface CategorySidebarProps {
   categories: Category[];
   currentCategoryId?: string;
+  className?: string; // Added className prop
 }
 
-export function CategorySidebar({ categories, currentCategoryId }: CategorySidebarProps) {
+export function CategorySidebar({ categories, currentCategoryId, className }: CategorySidebarProps) {
   const pathname = usePathname();
 
   return (
-    <ScrollArea className="h-full">
+    <ScrollArea className={cn("h-full", className)}> {/* Applied className prop */}
       <nav className="flex flex-col gap-1 p-2">
-        {/* New div for internal sidebar header with toggle */}
-        <div className="flex items-center gap-2 px-2 mb-2 group-data-[collapsible=icon]:hidden">
-          <SidebarTrigger className="h-5 w-5 text-primary hover:bg-primary/10" />
-          <h3 className="text-md font-semibold text-primary">Categories</h3>
-        </div>
+        {/* The div for internal sidebar header with toggle has been removed */}
         
         {categories.map((category) => {
           const isActive = currentCategoryId === category.id || pathname === `/category/${category.id}`;
