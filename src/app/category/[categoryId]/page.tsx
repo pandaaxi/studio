@@ -6,10 +6,12 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { CategorySidebar } from '@/components/layout/category-sidebar';
 import { CATEGORIES } from '@/data/category-list';
 import type { Category as CategoryType } from '@/types';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function CategoryPage() {
   const params = useParams();
@@ -19,10 +21,9 @@ export default function CategoryPage() {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [headerSearchTerm, setHeaderSearchTerm] = useState('');
+  const [headerSearchTerm, setHeaderSearchTerm] = useState(''); // For the header search
 
   useEffect(() => {
-    // Reset states when categoryId changes
     setIsLoading(true);
     setError(null);
     setCategory(null);
@@ -42,19 +43,11 @@ export default function CategoryPage() {
       return;
     }
 
-    setCategory(foundCategory); // Category is found, isLoading remains true for content fetching
+    setCategory(foundCategory);
 
     async function fetchMarkdown() {
       try {
-        let response;
-        if (foundCategory.source.startsWith('/')) {
-          // Files in `public` are served from the root
-          response = await fetch(foundCategory.source);
-        } else {
-          // Remote URL
-          response = await fetch(foundCategory.source);
-        }
-
+        const response = await fetch(foundCategory.source.startsWith('/') ? foundCategory.source : foundCategory.source);
         if (!response.ok) {
           throw new Error(`Failed to fetch markdown: ${response.status} ${response.statusText}`);
         }
@@ -64,7 +57,7 @@ export default function CategoryPage() {
         console.error(`Error fetching markdown from ${foundCategory.source}:`, err);
         setError(`Could not load category content: ${err.message}. Please check the source or network connection.`);
       } finally {
-        setIsLoading(false); // Loading finished for content (either success or error)
+        setIsLoading(false);
       }
     }
 
@@ -72,68 +65,62 @@ export default function CategoryPage() {
 
   }, [categoryId]);
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-background text-foreground">
-        <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
-        <main className="flex-grow container mx-auto px-4 md:px-8 py-8 flex flex-col items-center justify-center">
+  const mainContent = () => {
+    if (isLoading && !category) { // Initial loading before category is identified
+      return (
+        <div className="flex-grow flex flex-col items-center justify-center p-8">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="mt-4 text-muted-foreground">Loading category content...</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Error occurred before category could be identified (e.g., "Category not found" or "ID missing")
-  if (error && !category) {
-    return (
-      <div className="flex flex-col min-h-screen bg-background text-foreground">
-        <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
-        <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
+          <p className="mt-4 text-muted-foreground">Loading category...</p>
+        </div>
+      );
+    }
+    
+    if (error && !category) { // Error finding category itself
+      return (
+        <div className="flex-grow p-8">
           <div className="mb-8">
             <Link href="/" className="inline-flex items-center text-primary hover:underline">
               <ArrowLeft className="mr-2 h-5 w-5" />
-              Back to Categories
+              Back to Home
             </Link>
           </div>
           <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow text-center">
             <h1 className="text-2xl font-bold mb-2">Error</h1>
             <p>{error}</p>
           </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+        </div>
+      );
+    }
 
-  // If category is loaded, display its details and content (or content-specific error)
-  if (category) {
-    return (
-      <div className="flex flex-col min-h-screen bg-background text-foreground">
-        <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
-        <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
-          <div className="mb-8">
-            <Link href="/" className="inline-flex items-center text-primary hover:underline">
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              Back to Categories
+    if (category) {
+      return (
+        <ScrollArea className="h-full flex-grow p-4 md:p-6 lg:p-8">
+          <div className="mb-6">
+            <Link href="/" className="inline-flex items-center text-primary hover:underline text-sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
             </Link>
           </div>
 
           <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
           <p className="text-lg text-muted-foreground mb-6">{category.description}</p>
 
-          {/* Error related to content fetching for this specific category */}
-          {error && markdownContent === null && (
-            <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow">
+          {isLoading && markdownContent === null && ( // Loading content for a valid category
+            <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow mt-6">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="mt-4 text-muted-foreground">Loading content...</p>
+            </div>
+          )}
+
+          {error && markdownContent === null && !isLoading && ( // Error fetching content
+            <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow mt-6">
               <h2 className="text-xl font-semibold mb-2">Content Error</h2>
               <p>{error}</p>
             </div>
           )}
 
-          {/* Successfully loaded markdown content */}
-          {!error && markdownContent !== null && markdownContent !== "" && (
-            <article className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-card p-6 rounded-lg shadow">
+          {!isLoading && !error && markdownContent !== null && markdownContent !== "" && (
+            <article className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-card p-6 rounded-lg shadow mt-6">
               <ReactMarkdown
                 components={{
                   a: ({node, ...props}) => <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
@@ -164,41 +151,39 @@ export default function CategoryPage() {
             </article>
           )}
 
-          {/* Markdown file is empty */}
-          {!error && markdownContent === "" && (
-            <div className="bg-card p-6 rounded-lg shadow">
+          {!isLoading && !error && markdownContent === "" && (
+             <div className="bg-card p-6 rounded-lg shadow mt-6">
               <p className="text-muted-foreground">No content available for this category. The file might be empty.</p>
             </div>
           )}
-
-          {/* Case where content is still null, but no error and not loading (should be rare after refactor) */}
-           {!error && markdownContent === null && (
-             <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow">
-               <Loader2 className="h-8 w-8 animate-spin text-primary" />
-               <p className="mt-4 text-muted-foreground">Preparing content...</p>
-             </div>
-          )}
-
-        </main>
-        <Footer />
-      </div>
+        </ScrollArea>
+      );
+    }
+    
+    // Fallback for unexpected states
+    return (
+       <div className="flex-grow p-8">
+          <div className="mb-8">
+            <Link href="/" className="inline-flex items-center text-primary hover:underline">
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Back to Home
+            </Link>
+          </div>
+          <div className="bg-card p-6 rounded-lg shadow text-center">
+            <h1 className="text-2xl font-bold mb-2 text-destructive">Page Error</h1>
+            <p className="text-muted-foreground">An unexpected error occurred. Please try again or return to the homepage.</p>
+          </div>
+        </div>
     );
-  }
+  };
 
-  // Fallback if none of the above conditions are met (e.g., !isLoading, !error, !category)
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
-      <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-primary hover:underline">
-            <ArrowLeft className="mr-2 h-5 w-5" />
-            Back to Categories
-          </Link>
-        </div>
-        <div className="bg-card p-6 rounded-lg shadow text-center">
-          <h1 className="text-2xl font-bold mb-2 text-destructive">Page Error</h1>
-          <p className="text-muted-foreground">An unexpected error occurred. Please try again or return to the homepage.</p>
+      <main className="flex-grow flex flex-row overflow-hidden"> {/* Flex row for sidebar and content */}
+        <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
+        <div className="flex-grow flex flex-col overflow-y-auto"> {/* Main content area scroll */}
+          {mainContent()}
         </div>
       </main>
       <Footer />
