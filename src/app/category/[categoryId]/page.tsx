@@ -214,7 +214,7 @@ export default function CategoryPage() {
             />
 
             {/* Trigger to expand sidebar when it's in icon mode - visible only when collapsed */}
-            <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center h-full">
+            <div className="hidden group-data-[collapsible=icon]:flex items-start justify-center h-full pt-3">
                 <SidebarTrigger />
             </div>
           </SidebarContent>
