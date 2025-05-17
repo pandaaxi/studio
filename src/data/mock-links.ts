@@ -1,9 +1,11 @@
+
 import type { Category } from '@/types';
 
 export const MOCK_CATEGORIES: Category[] = [
   {
     id: "dev-tools",
     name: "Developer Tools",
+    description: "Essential tools, platforms, and services for building, testing, and deploying software projects efficiently.",
     links: [
       { 
         id: "gh", 
@@ -28,6 +30,7 @@ export const MOCK_CATEGORIES: Category[] = [
   {
     id: "design-resources",
     name: "Design Resources",
+    description: "Find inspiration, UI kits, stock photos, and collaborative tools for your creative design projects.",
     links: [
       { 
         id: "figma", 
@@ -52,6 +55,7 @@ export const MOCK_CATEGORIES: Category[] = [
   {
     id: "learning-platforms",
     name: "Learning Platforms",
+    description: "Expand your knowledge and acquire new skills with a wide range of online courses and educational resources.",
     links: [
       {
         id: "coursera",

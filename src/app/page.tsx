@@ -21,17 +21,11 @@ export default function HomePage() {
       return allCategories;
     }
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return allCategories
-      .map(category => ({
-        ...category,
-        links: category.links.filter(
-          link =>
-            link.title.toLowerCase().includes(lowerSearchTerm) ||
-            link.description.toLowerCase().includes(lowerSearchTerm) ||
-            link.url.toLowerCase().includes(lowerSearchTerm)
-        ),
-      }))
-      .filter(category => category.links.length > 0 || category.name.toLowerCase().includes(lowerSearchTerm));
+    return allCategories.filter(
+      category =>
+        category.name.toLowerCase().includes(lowerSearchTerm) ||
+        (category.description && category.description.toLowerCase().includes(lowerSearchTerm))
+    );
   }, [searchTerm, allCategories]);
 
   useEffect(() => {
@@ -54,10 +48,8 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {/* Header component removed from here */}
       
       <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
-        {/* New Intro Section */}
         <section className="text-center pt-12 pb-16">
           <h1 className="text-5xl font-bold text-primary mb-4">Link Oasis</h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -67,11 +59,11 @@ export default function HomePage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search links or categories..."
+              placeholder="Search categories by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-12 pr-4 py-3 w-full rounded-full bg-input focus:bg-background text-base shadow-sm"
-              aria-label="Search links or categories"
+              aria-label="Search categories by name or description"
             />
           </div>
           <div className="flex justify-center">
@@ -85,9 +77,9 @@ export default function HomePage() {
           ))
         ) : (
           <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No links or categories found.</h2>
+            <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No categories found.</h2>
             <p className="text-muted-foreground">
-              Try adjusting your search term.
+              Try adjusting your search term or explore all categories.
             </p>
           </div>
         )}

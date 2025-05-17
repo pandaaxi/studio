@@ -1,3 +1,4 @@
+
 export interface LinkItem {
   id: string;
   title: string;
@@ -8,5 +9,6 @@ export interface LinkItem {
 export interface Category {
   id:string;
   name: string;
+  description: string; // Added category description
   links: LinkItem[];
 }
