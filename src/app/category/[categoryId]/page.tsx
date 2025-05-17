@@ -1,5 +1,5 @@
 
-'use client'; 
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
@@ -22,6 +22,12 @@ export default function CategoryPage() {
   const [headerSearchTerm, setHeaderSearchTerm] = useState('');
 
   useEffect(() => {
+    // Reset states when categoryId changes
+    setIsLoading(true);
+    setError(null);
+    setCategory(null);
+    setMarkdownContent(null);
+
     if (!categoryId) {
       setError("Category ID is missing.");
       setIsLoading(false);
@@ -36,19 +42,17 @@ export default function CategoryPage() {
       return;
     }
 
-    setCategory(foundCategory);
-    setIsLoading(true); // Reset loading state for fetching markdown
-    setError(null); // Clear previous errors
+    setCategory(foundCategory); // Category is found, isLoading remains true for content fetching
 
     async function fetchMarkdown() {
       try {
         let response;
         if (foundCategory.source.startsWith('/')) {
           // Files in `public` are served from the root
-          response = await fetch(foundCategory.source); 
+          response = await fetch(foundCategory.source);
         } else {
           // Remote URL
-          response = await fetch(foundCategory.source); 
+          response = await fetch(foundCategory.source);
         }
 
         if (!response.ok) {
@@ -60,7 +64,7 @@ export default function CategoryPage() {
         console.error(`Error fetching markdown from ${foundCategory.source}:`, err);
         setError(`Could not load category content: ${err.message}. Please check the source or network connection.`);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Loading finished for content (either success or error)
       }
     }
 
@@ -68,22 +72,22 @@ export default function CategoryPage() {
 
   }, [categoryId]);
 
-  if (isLoading && !category) { // Initial loading before category is identified
+  if (isLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground">
         <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
         <main className="flex-grow container mx-auto px-4 md:px-8 py-8 flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="mt-4 text-muted-foreground">Loading category...</p>
+          <p className="mt-4 text-muted-foreground">Loading category content...</p>
         </main>
         <Footer />
       </div>
     );
   }
-  
-  // If category is not found after checking
-  if (!isLoading && !category && error) {
-     return (
+
+  // Error occurred before category could be identified (e.g., "Category not found" or "ID missing")
+  if (error && !category) {
+    return (
       <div className="flex flex-col min-h-screen bg-background text-foreground">
         <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
         <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
@@ -103,8 +107,85 @@ export default function CategoryPage() {
     );
   }
 
+  // If category is loaded, display its details and content (or content-specific error)
+  if (category) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background text-foreground">
+        <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
+        <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
+          <div className="mb-8">
+            <Link href="/" className="inline-flex items-center text-primary hover:underline">
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Back to Categories
+            </Link>
+          </div>
 
-  // If category found, but content is still loading or errored
+          <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
+          <p className="text-lg text-muted-foreground mb-6">{category.description}</p>
+
+          {/* Error related to content fetching for this specific category */}
+          {error && markdownContent === null && (
+            <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold mb-2">Content Error</h2>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Successfully loaded markdown content */}
+          {!error && markdownContent !== null && markdownContent !== "" && (
+            <article className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-card p-6 rounded-lg shadow">
+              <ReactMarkdown
+                components={{
+                  a: ({node, ...props}) => <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2" {...props} />,
+                  ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2" {...props} />,
+                  li: ({node, ...props}) => <li className="my-1" {...props} />,
+                  h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-6 mb-3 text-primary" {...props} />,
+                  h2: ({node, ...props}) => <h2 className="text-2xl font-semibold mt-5 mb-2 text-primary/90" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-xl font-semibold mt-4 mb-1 text-primary/80" {...props} />,
+                  p: ({node, ...props}) => <p className="my-3 leading-relaxed" {...props} />,
+                  blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground my-4" {...props} />,
+                  code: ({node, inline, className, children, ...props}) => {
+                      const match = /language-(\w+)/.exec(className || '')
+                      return !inline && match ? (
+                        <div className="my-4 rounded bg-muted/50 p-4 overflow-x-auto">
+                          <pre className={`language-${match[1]}`}><code {...props}>{children}</code></pre>
+                        </div>
+                      ) : (
+                        <code className="px-1 py-0.5 bg-muted rounded text-accent-foreground" {...props}>
+                          {children}
+                        </code>
+                      )
+                    }
+                }}
+              >
+                {markdownContent}
+              </ReactMarkdown>
+            </article>
+          )}
+
+          {/* Markdown file is empty */}
+          {!error && markdownContent === "" && (
+            <div className="bg-card p-6 rounded-lg shadow">
+              <p className="text-muted-foreground">No content available for this category. The file might be empty.</p>
+            </div>
+          )}
+
+          {/* Case where content is still null, but no error and not loading (should be rare after refactor) */}
+           {!error && markdownContent === null && (
+             <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow">
+               <Loader2 className="h-8 w-8 animate-spin text-primary" />
+               <p className="mt-4 text-muted-foreground">Preparing content...</p>
+             </div>
+          )}
+
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Fallback if none of the above conditions are met (e.g., !isLoading, !error, !category)
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
@@ -115,64 +196,10 @@ export default function CategoryPage() {
             Back to Categories
           </Link>
         </div>
-
-        {category && (
-          <>
-            <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
-            <p className="text-lg text-muted-foreground mb-6">{category.description}</p>
-          </>
-        )}
-
-        {isLoading && markdownContent === null && (
-            <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="mt-4 text-muted-foreground">Loading content...</p>
-            </div>
-        )}
-
-        {!isLoading && error && markdownContent === null &&(
-            <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-2">Content Error</h2>
-                <p>{error}</p>
-            </div>
-        )}
-
-        {!isLoading && !error && markdownContent !== null && (
-          <article className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-card p-6 rounded-lg shadow">
-            <ReactMarkdown
-              components={{
-                 a: ({node, ...props}) => <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
-                 ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2" {...props} />,
-                 ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2" {...props} />,
-                 li: ({node, ...props}) => <li className="my-1" {...props} />,
-                 h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-6 mb-3 text-primary" {...props} />,
-                 h2: ({node, ...props}) => <h2 className="text-2xl font-semibold mt-5 mb-2 text-primary/90" {...props} />,
-                 h3: ({node, ...props}) => <h3 className="text-xl font-semibold mt-4 mb-1 text-primary/80" {...props} />,
-                 p: ({node, ...props}) => <p className="my-3 leading-relaxed" {...props} />,
-                 blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground my-4" {...props} />,
-                 code: ({node, inline, className, children, ...props}) => {
-                    const match = /language-(\w+)/.exec(className || '')
-                    return !inline && match ? (
-                      <div className="my-4 rounded bg-muted/50 p-4 overflow-x-auto">
-                        <pre className={`language-${match[1]}`}><code {...props}>{children}</code></pre>
-                      </div>
-                    ) : (
-                      <code className="px-1 py-0.5 bg-muted rounded text-accent-foreground" {...props}>
-                        {children}
-                      </code>
-                    )
-                  }
-              }}
-            >
-              {markdownContent}
-            </ReactMarkdown>
-          </article>
-        )}
-         {!isLoading && !error && markdownContent === "" && (
-            <div className="bg-card p-6 rounded-lg shadow">
-                <p className="text-muted-foreground">No content available for this category. The file might be empty.</p>
-            </div>
-        )}
+        <div className="bg-card p-6 rounded-lg shadow text-center">
+          <h1 className="text-2xl font-bold mb-2 text-destructive">Page Error</h1>
+          <p className="text-muted-foreground">An unexpected error occurred. Please try again or return to the homepage.</p>
+        </div>
       </main>
       <Footer />
     </div>
