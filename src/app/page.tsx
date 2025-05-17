@@ -1,13 +1,15 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategorySection } from '@/components/category-section';
 import { MOCK_CATEGORIES } from '@/data/mock-links';
 import type { Category } from '@/types';
 import { Button } from '@/components/ui/button';
-import { ArrowUp } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ArrowUp, Search } from 'lucide-react';
+import { SuggestDescriptionDialog } from '@/components/suggest-description-dialog';
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,20 +54,40 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header 
-        searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm}
-      />
+      {/* Header component removed from here */}
+      
       <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
+        {/* New Intro Section */}
+        <section className="text-center pt-12 pb-16">
+          <h1 className="text-5xl font-bold text-primary mb-4">Link Oasis</h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Your personal oasis of categorized website links, easily managed and discovered.
+          </p>
+          <div className="max-w-xl mx-auto mb-8 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search links or categories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 pr-4 py-3 w-full rounded-full bg-input focus:bg-background text-base shadow-sm"
+              aria-label="Search links or categories"
+            />
+          </div>
+          <div className="flex justify-center">
+             <SuggestDescriptionDialog />
+          </div>
+        </section>
+
         {filteredCategories.length > 0 ? (
           filteredCategories.map(category => (
             <CategorySection key={category.id} category={category} />
           ))
         ) : (
           <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No links found.</h2>
+            <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No links or categories found.</h2>
             <p className="text-muted-foreground">
-              Try adjusting your search term. If you are the owner, you can add new links directly on GitHub.
+              Try adjusting your search term.
             </p>
           </div>
         )}
