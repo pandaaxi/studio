@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Footer } from '@/components/layout/footer';
 import { CategorySection } from '@/components/category-section';
-import { MOCK_CATEGORIES } from '@/data/mock-links';
+import { CATEGORIES } from '@/data/category-list'; // Updated import
 import type { Category } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { SuggestDescriptionDialog } from '@/components/suggest-description-dialo
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [allCategories] = useState<Category[]>(MOCK_CATEGORIES);
+  const [allCategories] = useState<Category[]>(CATEGORIES); // Use new CATEGORIES
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const filteredCategories = useMemo(() => {
@@ -71,7 +71,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <div className="p-0 md:p-6"> {/* Adjusted padding, or remove if cards have enough */}
+        <div className="p-0 md:p-6">
           {filteredCategories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredCategories.map((category) => (

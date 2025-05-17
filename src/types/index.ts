@@ -11,6 +11,6 @@ export interface Category {
   name: string;
   description: string; // Category description
   icon?: string; // Optional: Lucide icon name for the category
-  links: LinkItem[];
+  source: string; // Path to local Markdown file (e.g., "/dev-tools.md") or remote URL
 }
 
