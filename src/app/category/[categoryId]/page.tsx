@@ -192,7 +192,6 @@ export default function CategoryPage() {
       <Header
         searchTerm={headerSearchTerm}
         setSearchTerm={setHeaderSearchTerm}
-        // showSidebarToggle prop removed
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar 
@@ -201,17 +200,23 @@ export default function CategoryPage() {
           className="hidden md:flex bg-card border-r top-[88px] h-[calc(100svh-88px)]"
         > 
           <SidebarContent className="p-0 pt-[88px] flex flex-col gap-0">
-            {/* Sidebar's own fixed header part */}
+            {/* Sidebar's own fixed header part - visible when expanded */}
             <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-start gap-2">
               <SidebarTrigger />
               <h3 className="text-md font-semibold text-primary">Categories</h3>
             </div>
-            {/* Scrollable list of categories */}
+            
+            {/* Scrollable list of categories - visible when expanded */}
             <CategorySidebar 
               categories={CATEGORIES} 
               currentCategoryId={categoryId} 
-              className="flex-grow" 
+              className="flex-grow group-data-[collapsible=icon]:hidden" 
             />
+
+            {/* Trigger to expand sidebar when it's in icon mode - visible only when collapsed */}
+            <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center h-full">
+                <SidebarTrigger />
+            </div>
           </SidebarContent>
         </Sidebar>
         
