@@ -14,7 +14,7 @@ export function CategorySection({ category }: CategorySectionProps) {
     <section className="mb-12" aria-labelledby={`category-title-${category.id}`}>
       <h2 
         id={`category-title-${category.id}`} 
-        className="text-3xl font-semibold mb-6 pb-2 border-b-2 border-accent text-accent-foreground"
+        className="text-3xl font-semibold mb-6 pb-2 border-b-2 border-accent text-accent"
       >
         {category.name}
       </h2>
