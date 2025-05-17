@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -22,11 +23,11 @@ export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search links..."
+            placeholder="Search categories..." // Updated placeholder
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-4 py-2 w-full rounded-full bg-input focus:bg-background"
-            aria-label="Search links"
+            aria-label="Search categories"
           />
         </div>
 

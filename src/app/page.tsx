@@ -3,17 +3,18 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header'; // Import Header
 import { CategorySection } from '@/components/category-section';
-import { CATEGORIES } from '@/data/category-list'; // Updated import
+import { CATEGORIES } from '@/data/category-list';
 import type { Category } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowUp, Search } from 'lucide-react';
-import { SuggestDescriptionDialog } from '@/components/suggest-description-dialog';
+import { ArrowUp } from 'lucide-react';
+// Removed Input and Search icon import as they are no longer directly used here
+// Removed SuggestDescriptionDialog import as it's now in the Header
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [allCategories] = useState<Category[]>(CATEGORIES); // Use new CATEGORIES
+  const [allCategories] = useState<Category[]>(CATEGORIES);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const filteredCategories = useMemo(() => {
@@ -45,9 +46,9 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> {/* Add Header */}
       
       <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
         <section className="text-center pt-12 pb-16">
@@ -55,20 +56,7 @@ export default function HomePage() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Your personal oasis of categorized website links, easily managed and discovered.
           </p>
-          <div className="max-w-xl mx-auto mb-8 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search categories by name or description..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 pr-4 py-3 w-full rounded-full bg-input focus:bg-background text-base shadow-sm"
-              aria-label="Search categories by name or description"
-            />
-          </div>
-          <div className="flex justify-center">
-             <SuggestDescriptionDialog />
-          </div>
+          {/* Search input and SuggestDescriptionDialog removed from here */}
         </section>
 
         <div className="p-0 md:p-6">
