@@ -27,7 +27,7 @@ export default function CategoryPage() {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [headerSearchTerm, setHeaderSearchTerm] = useState(''); // Separate search term for this page's header
+  const [headerSearchTerm, setHeaderSearchTerm] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,7 +53,6 @@ export default function CategoryPage() {
 
     async function fetchMarkdown() {
       try {
-        // Construct the URL properly. If it starts with '/', it's relative to /public.
         const sourceUrl = foundCategory.source.startsWith('/')
           ? `${window.location.origin}${foundCategory.source}`
           : foundCategory.source;
@@ -77,7 +76,7 @@ export default function CategoryPage() {
   }, [categoryId]);
 
   const mainContentArea = () => {
-    if (isLoading && !category) { // Initial loading state for the category itself
+    if (isLoading && !category && !markdownContent) { 
       return (
         <div className="flex-grow flex flex-col items-center justify-center p-8">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -86,7 +85,7 @@ export default function CategoryPage() {
       );
     }
 
-    if (error && !category) { // Error finding the category
+    if (error && !category) { 
       return (
         <div className="flex-grow p-8">
           <div className="mb-8">
@@ -103,7 +102,7 @@ export default function CategoryPage() {
       );
     }
 
-    if (category) { // Category found, now handle content loading/error
+    if (category) { 
       return (
         <ScrollArea className="h-full flex-grow p-4 md:p-6 lg:p-8">
           <div className="mb-6 flex items-center justify-between">
@@ -116,14 +115,14 @@ export default function CategoryPage() {
           <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
           <p className="text-lg text-muted-foreground mb-6">{category.description}</p>
 
-          {isLoading && markdownContent === null && ( // Loading markdown content
+          {isLoading && markdownContent === null && ( 
             <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow mt-6">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p className="mt-4 text-muted-foreground">Loading content...</p>
             </div>
           )}
 
-          {error && markdownContent === null && !isLoading && ( // Error loading markdown content
+          {error && markdownContent === null && !isLoading && ( 
             <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow mt-6">
               <h2 className="text-xl font-semibold mb-2">Content Error</h2>
               <p>{error}</p>
@@ -162,7 +161,7 @@ export default function CategoryPage() {
             </article>
           )}
 
-          {!isLoading && !error && markdownContent === "" && ( // Markdown content is empty
+          {!isLoading && !error && markdownContent === "" && ( 
              <div className="bg-card p-6 rounded-lg shadow mt-6">
               <p className="text-muted-foreground">No content available for this category. The file might be empty.</p>
             </div>
@@ -171,7 +170,6 @@ export default function CategoryPage() {
       );
     }
 
-    // Fallback for unexpected states, though ideally covered above.
     return (
        <div className="flex-grow p-8">
           <div className="mb-8">
@@ -195,21 +193,18 @@ export default function CategoryPage() {
         setSearchTerm={setHeaderSearchTerm}
         showSidebarToggle={true}
       />
-      <div className="flex flex-1 overflow-hidden"> {/* This container is crucial for SidebarProvider's children layout */}
-        {/* Desktop sidebar: Apply top offset and adjusted height to fit below sticky header */}
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar 
           side="left" 
           collapsible="icon" 
           className="hidden md:flex bg-card border-r top-[88px] h-[calc(100svh-88px)]"
         > 
-          <SidebarContent className="p-0">
+          <SidebarContent className="p-0 pt-[88px]"> {/* Added pt-[88px] */}
             <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
           </SidebarContent>
         </Sidebar>
         
-        {/* Mobile sidebar is handled by SidebarProvider/Sidebar via Sheet when trigger in Header is clicked */}
-        
-        <SidebarInset className="flex flex-col overflow-hidden"> {/* Ensure SidebarInset can grow and manage its own scroll */}
+        <SidebarInset className="flex flex-col overflow-hidden h-full min-h-0"> {/* Added h-full min-h-0 */}
           {mainContentArea()}
         </SidebarInset>
       </div>
