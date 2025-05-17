@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Example for allowing favicons from any domain if you were to implement favicon fetching:
+      // {
+      //   protocol: 'https',
+      //   hostname: '**', 
+      //   pathname: '/favicon.ico',
+      // },
     ],
   },
 };
