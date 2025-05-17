@@ -12,6 +12,13 @@ import type { Category as CategoryType } from '@/types';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  SidebarProvider, 
+  Sidebar, 
+  SidebarContent, 
+  SidebarInset,
+  SidebarTrigger // Though trigger is in Header, provider needs to wrap sidebar parts
+} from '@/components/ui/sidebar';
 
 export default function CategoryPage() {
   const params = useParams();
@@ -21,7 +28,7 @@ export default function CategoryPage() {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [headerSearchTerm, setHeaderSearchTerm] = useState(''); // For the header search
+  const [headerSearchTerm, setHeaderSearchTerm] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -65,8 +72,8 @@ export default function CategoryPage() {
 
   }, [categoryId]);
 
-  const mainContent = () => {
-    if (isLoading && !category) { // Initial loading before category is identified
+  const mainContentArea = () => {
+    if (isLoading && !category) {
       return (
         <div className="flex-grow flex flex-col items-center justify-center p-8">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -75,11 +82,11 @@ export default function CategoryPage() {
       );
     }
     
-    if (error && !category) { // Error finding category itself
+    if (error && !category) {
       return (
         <div className="flex-grow p-8">
           <div className="mb-8">
-            <Link href="/" className="inline-flex items-center text-primary hover:underline">
+             <Link href="/" className="inline-flex items-center text-primary hover:underline">
               <ArrowLeft className="mr-2 h-5 w-5" />
               Back to Home
             </Link>
@@ -94,25 +101,30 @@ export default function CategoryPage() {
 
     if (category) {
       return (
+        // ScrollArea now wraps the content inside SidebarInset for better control
         <ScrollArea className="h-full flex-grow p-4 md:p-6 lg:p-8">
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <Link href="/" className="inline-flex items-center text-primary hover:underline text-sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Home
             </Link>
+             {/* Desktop sidebar trigger can be placed here if not in global header,
+                 but ui/sidebar's collapsible="icon" with rail is often preferred for desktop.
+                 The trigger in Header primarily serves mobile.
+              */}
           </div>
 
           <h1 className="text-4xl font-bold text-primary mb-2">{category.name}</h1>
           <p className="text-lg text-muted-foreground mb-6">{category.description}</p>
 
-          {isLoading && markdownContent === null && ( // Loading content for a valid category
+          {isLoading && markdownContent === null && (
             <div className="flex flex-col items-center justify-center bg-card p-6 rounded-lg shadow mt-6">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p className="mt-4 text-muted-foreground">Loading content...</p>
             </div>
           )}
 
-          {error && markdownContent === null && !isLoading && ( // Error fetching content
+          {error && markdownContent === null && !isLoading && (
             <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-lg shadow mt-6">
               <h2 className="text-xl font-semibold mb-2">Content Error</h2>
               <p>{error}</p>
@@ -160,7 +172,6 @@ export default function CategoryPage() {
       );
     }
     
-    // Fallback for unexpected states
     return (
        <div className="flex-grow p-8">
           <div className="mb-8">
@@ -179,13 +190,24 @@ export default function CategoryPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header searchTerm={headerSearchTerm} setSearchTerm={setHeaderSearchTerm} />
-      <main className="flex-grow flex flex-row overflow-hidden"> {/* Flex row for sidebar and content */}
-        <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
-        <div className="flex-grow flex flex-col overflow-y-auto"> {/* Main content area scroll */}
-          {mainContent()}
+      <Header 
+        searchTerm={headerSearchTerm} 
+        setSearchTerm={setHeaderSearchTerm}
+        showSidebarToggle={true} 
+      />
+      <SidebarProvider>
+        <div className="flex flex-1 overflow-hidden"> {/* This container is crucial for SidebarProvider */}
+          <Sidebar side="left" collapsible="icon" className="hidden md:flex bg-card border-r"> {/* Desktop sidebar */}
+            <SidebarContent className="p-0"> {/* Use SidebarContent for consistent padding/scrolling */}
+              <CategorySidebar categories={CATEGORIES} currentCategoryId={categoryId} />
+            </SidebarContent>
+          </Sidebar>
+          {/* Mobile sidebar is handled by SidebarProvider/Sidebar via Sheet when trigger in Header is clicked */}
+          <SidebarInset className="flex flex-col overflow-hidden"> {/* Ensure SidebarInset can grow and manage its own scroll */}
+            {mainContentArea()}
+          </SidebarInset>
         </div>
-      </main>
+      </SidebarProvider>
       <Footer />
     </div>
   );
