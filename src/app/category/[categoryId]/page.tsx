@@ -17,7 +17,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarInset,
-  // SidebarTrigger, // No longer needed directly here for the internal header
+  SidebarTrigger, 
 } from '@/components/ui/sidebar';
 
 export default function CategoryPage() {
@@ -202,9 +202,9 @@ export default function CategoryPage() {
         > 
           <SidebarContent className="p-0 pt-[88px] flex flex-col gap-0">
             {/* Sidebar's own fixed header part */}
-            <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-start"> {/* Changed justify-between to justify-start */}
+            <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-start gap-2">
+              <SidebarTrigger /> {/* Added SidebarTrigger here */}
               <h3 className="text-md font-semibold text-primary">Categories</h3>
-              {/* Removed SidebarTrigger from here */}
             </div>
             {/* Scrollable list of categories */}
             <CategorySidebar 
