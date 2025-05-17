@@ -192,7 +192,7 @@ export default function CategoryPage() {
       <Header
         searchTerm={headerSearchTerm}
         setSearchTerm={setHeaderSearchTerm}
-        showSidebarToggle={true}
+        // showSidebarToggle prop removed
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar 
@@ -203,7 +203,7 @@ export default function CategoryPage() {
           <SidebarContent className="p-0 pt-[88px] flex flex-col gap-0">
             {/* Sidebar's own fixed header part */}
             <div className="px-4 py-3 border-b border-sidebar-border group-data-[collapsible=icon]:hidden flex items-center justify-start gap-2">
-              <SidebarTrigger /> {/* Added SidebarTrigger here */}
+              <SidebarTrigger />
               <h3 className="text-md font-semibold text-primary">Categories</h3>
             </div>
             {/* Scrollable list of categories */}
@@ -223,4 +223,3 @@ export default function CategoryPage() {
     </SidebarProvider>
   );
 }
-

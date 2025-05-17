@@ -2,27 +2,23 @@
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Sparkles, PanelLeft } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react'; // Removed PanelLeft
 import type { Dispatch, SetStateAction } from 'react';
 import { SuggestDescriptionDialog } from '@/components/suggest-description-dialog';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+// Removed SidebarTrigger import
 
 interface HeaderProps {
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
-  showSidebarToggle?: boolean;
+  // Removed showSidebarToggle prop
 }
 
-export function Header({ searchTerm, setSearchTerm, showSidebarToggle }: HeaderProps) {
+export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
   return (
     <header className="py-6 px-4 md:px-8 border-b border-border sticky top-0 bg-background/80 backdrop-blur-md z-50">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2"> {/* Adjusted gap from 4 to 2 for closer grouping */}
-          {showSidebarToggle && (
-            <SidebarTrigger>
-              <PanelLeft className="h-5 w-5" />
-            </SidebarTrigger>
-          )}
+        <div className="flex items-center gap-2">
+          {/* SidebarTrigger removed from here */}
           <Link href="/" className="text-3xl font-bold text-primary hover:opacity-80 transition-opacity">
             Link Oasis
           </Link>
