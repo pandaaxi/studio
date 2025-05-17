@@ -9,15 +9,10 @@ import type { Category } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 
-const GITHUB_REPO_URL = "https://github.com/your-username/your-repo-name"; // Replace with actual repo URL
-const MARKDOWN_FILE_PATH = "edit/main/LINKS.md"; // Path to your markdown file
-
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [allCategories] = useState<Category[]>(MOCK_CATEGORIES);
   const [showScrollTop, setShowScrollTop] = useState(false);
-
-  const githubEditUrl = `${GITHUB_REPO_URL}/${MARKDOWN_FILE_PATH}`;
 
   const filteredCategories = useMemo(() => {
     if (!searchTerm.trim()) {
@@ -60,7 +55,6 @@ export default function HomePage() {
       <Header 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm}
-        githubEditUrl={githubEditUrl}
       />
       <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
         {filteredCategories.length > 0 ? (
@@ -71,15 +65,7 @@ export default function HomePage() {
           <div className="text-center py-12">
             <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No links found.</h2>
             <p className="text-muted-foreground">
-              Try adjusting your search term or{" "}
-              <a 
-                href={githubEditUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-primary hover:underline"
-              >
-                add new links on GitHub
-              </a>.
+              Try adjusting your search term. If you are the owner, you can add new links directly on GitHub.
             </p>
           </div>
         )}
