@@ -1,24 +1,26 @@
 
 import type { Category } from '@/types';
-// LinkCardItem is no longer used here for the homepage display
 
 interface CategorySectionProps {
   category: Category;
+  isLastItem: boolean; // To conditionally add the bottom border
 }
 
-export function CategorySection({ category }: CategorySectionProps) {
+export function CategorySection({ category, isLastItem }: CategorySectionProps) {
   return (
-    <section className="mb-12" aria-labelledby={`category-title-${category.id}`}>
+    <div
+      className={`px-6 py-8 ${!isLastItem ? 'border-b-2 border-accent' : ''}`}
+      aria-labelledby={`category-title-${category.id}`}
+    >
       <h2 
         id={`category-title-${category.id}`} 
-        className="text-3xl font-semibold mb-2 pb-2 border-b-2 border-accent text-accent"
+        className="text-3xl font-semibold mb-2 text-accent"
       >
         {category.name}
       </h2>
-      <p className="text-muted-foreground mt-2 mb-6 text-base">
+      <p className="text-muted-foreground mt-2 text-base">
         {category.description}
       </p>
-      {/* The grid of LinkCardItems has been removed from here */}
-    </section>
+    </div>
   );
 }

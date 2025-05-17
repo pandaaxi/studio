@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowUp, Search } from 'lucide-react';
 import { SuggestDescriptionDialog } from '@/components/suggest-description-dialog';
+import { Card } from '@/components/ui/card'; // Import Card
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,18 +72,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        {filteredCategories.length > 0 ? (
-          filteredCategories.map(category => (
-            <CategorySection key={category.id} category={category} />
-          ))
-        ) : (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No categories found.</h2>
-            <p className="text-muted-foreground">
-              Try adjusting your search term or explore all categories.
-            </p>
-          </div>
-        )}
+        <Card className="shadow-lg rounded-xl border border-foreground/20">
+          {filteredCategories.length > 0 ? (
+            <div>
+              {filteredCategories.map((category, index) => (
+                <CategorySection
+                  key={category.id}
+                  category={category}
+                  isLastItem={index === filteredCategories.length - 1}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 px-6">
+              <h2 className="text-2xl font-semibold text-muted-foreground mb-4">No categories found.</h2>
+              <p className="text-muted-foreground">
+                Try adjusting your search term or explore all categories.
+              </p>
+            </div>
+          )}
+        </Card>
       </main>
       <Footer />
       {showScrollTop && (
