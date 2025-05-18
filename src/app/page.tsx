@@ -3,14 +3,12 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header'; // Import Header
+import { Header } from '@/components/layout/header';
 import { CategorySection } from '@/components/category-section';
 import { CATEGORIES } from '@/data/category-list';
 import type { Category } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
-// Removed Input and Search icon import as they are no longer directly used here
-// Removed SuggestDescriptionDialog import as it's now in the Header
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,15 +46,14 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> {/* Add Header */}
+      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       
       <main className="flex-grow container mx-auto px-4 md:px-8 py-8">
         <section className="text-center pt-12 pb-16">
-          <h1 className="text-5xl font-bold text-primary mb-4">Link Oasis</h1>
+          <h1 className="text-5xl font-bold text-primary mb-4">Homie Docs</h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Your personal oasis of categorized website links, easily managed and discovered.
+            Your personal collection of categorized website links, easily managed and discovered.
           </p>
-          {/* Search input and SuggestDescriptionDialog removed from here */}
         </section>
 
         <div className="p-0 md:p-6">

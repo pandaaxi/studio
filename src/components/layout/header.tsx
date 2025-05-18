@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Mail } from 'lucide-react'; 
 import type { Dispatch, SetStateAction } from 'react';
-import { ThemeToggle } from '@/components/theme-toggle'; // Import ThemeToggle
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface HeaderProps {
   searchTerm: string;
@@ -13,9 +13,9 @@ interface HeaderProps {
 
 export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
   const mailtoHref = `mailto:admin@gmail.com?subject=${encodeURIComponent(
-    "Link Suggestion for Link Oasis"
+    "Link Suggestion for Homie Docs"
   )}&body=${encodeURIComponent(
-    "Hello Link Oasis Team,\\n\\nI'd like to suggest the following:\\n\\nLink URL (if applicable):\\nSuggested Category:\\nBrief Description/Reason for suggestion:\\n\\nThanks,\\n"
+    "Hello Homie Docs Team,\\n\\nI'd like to suggest the following:\\n\\nLink URL (if applicable):\\nSuggested Category:\\nBrief Description/Reason for suggestion:\\n\\nThanks,\\n"
   )}`;
 
   return (
@@ -23,7 +23,7 @@ export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Link href="/" className="text-3xl font-bold text-primary hover:opacity-80 transition-opacity">
-            Link Oasis
+            Homie Docs
           </Link>
         </div>
         
@@ -39,14 +39,14 @@ export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
           />
         </div>
 
-        <div className="flex items-center gap-2"> {/* Added a flex container for buttons */}
+        <div className="flex items-center gap-2">
           <Button asChild variant="outline" className="rounded-full">
             <a href={mailtoHref}>
               <Mail className="mr-2 h-4 w-4" />
               Suggest a Link
             </a>
           </Button>
-          <ThemeToggle /> {/* Add ThemeToggle button */}
+          <ThemeToggle />
         </div>
       </div>
     </header>

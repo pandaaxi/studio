@@ -24,13 +24,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
   if (!category) {
     return {
-      title: 'Category Not Found - Link Oasis',
+      title: 'Category Not Found - Homie Docs',
       description: 'The requested category could not be found.',
     };
   }
 
   return {
-    title: `${category.name} - Link Oasis`,
+    title: `${category.name} - Homie Docs`,
     description: `Explore links related to ${category.name}. ${category.description}`,
   };
 }

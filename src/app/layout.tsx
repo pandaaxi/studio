@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: 'Link Oasis - Curated Web Resources',
-  description: 'Your personal oasis of categorized website links, easily managed and discovered.',
+  title: 'Homie Docs - Curated Web Resources',
+  description: 'Your personal collection of categorized website links, easily managed and discovered.',
 };
 
 export default function RootLayout({
