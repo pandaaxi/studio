@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Mail } from 'lucide-react'; 
 import type { Dispatch, SetStateAction } from 'react';
+import { ThemeToggle } from '@/components/theme-toggle'; // Import ThemeToggle
 
 interface HeaderProps {
   searchTerm: string;
@@ -14,7 +15,7 @@ export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
   const mailtoHref = `mailto:admin@gmail.com?subject=${encodeURIComponent(
     "Link Suggestion for Link Oasis"
   )}&body=${encodeURIComponent(
-    "Hello Link Oasis Team,\n\nI'd like to suggest the following:\n\nLink URL (if applicable):\nSuggested Category:\nBrief Description/Reason for suggestion:\n\nThanks,\n"
+    "Hello Link Oasis Team,\\n\\nI'd like to suggest the following:\\n\\nLink URL (if applicable):\\nSuggested Category:\\nBrief Description/Reason for suggestion:\\n\\nThanks,\\n"
   )}`;
 
   return (
@@ -38,13 +39,14 @@ export function Header({ searchTerm, setSearchTerm }: HeaderProps) {
           />
         </div>
 
-        <div>
+        <div className="flex items-center gap-2"> {/* Added a flex container for buttons */}
           <Button asChild variant="outline" className="rounded-full">
             <a href={mailtoHref}>
               <Mail className="mr-2 h-4 w-4" />
               Suggest a Link
             </a>
           </Button>
+          <ThemeToggle /> {/* Add ThemeToggle button */}
         </div>
       </div>
     </header>
