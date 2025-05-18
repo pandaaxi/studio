@@ -1,4 +1,3 @@
-
 // No 'use client' here
 
 import type { Metadata } from 'next';
@@ -39,6 +38,6 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   // This component is now a Server Component wrapper.
-  // It passes params to the actual client component responsible for rendering.
+  // It passes params.categoryId to the actual client component responsible for rendering.
   return <CategoryPageContent categoryId={params.categoryId} />;
 }
