@@ -17,8 +17,15 @@ import {
   Sidebar,
   SidebarContent,
   SidebarInset,
-  SidebarTrigger, 
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
+
+// Required for static export with dynamic routes
+export async function generateStaticParams() {
+  return CATEGORIES.map((category) => ({
+    categoryId: category.id,
+  }));
+}
 
 export default function CategoryPage() {
   const params = useParams();
